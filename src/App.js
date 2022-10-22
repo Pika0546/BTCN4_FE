@@ -1,6 +1,7 @@
 
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useForm, Controller } from "react-hook-form";
+import { useSnackbar } from 'notistack';
 
 import './App.css';
 
@@ -9,20 +10,49 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
 import Stack from "@mui/material/Stack"
+
 import { createAccount } from './services/signup';
+import { APIStatus } from './lib/common';
 
 const App = () => {
 
-	const { handleSubmit, control } = useForm();
-
+	const { handleSubmit, control, setError } = useForm();
+	const {enqueueSnackbar} = useSnackbar()
+	const [formName] = useState({
+		username: "qwe",
+		password: "zxc"
+	})
 	const submitForm = async (data) => {
-		console.log(data);
+		
+		const newData = {
+			username: data[formName.username],
+			password: data[formName.password],
+		}
+		console.log(data, newData);
 		try {
-			const res = await createAccount(data);
+			const res = await createAccount(newData);
 			console.log(res);
+			if(res.status === APIStatus.OK){
+				enqueueSnackbar(res.message, {
+					variant:'success',
+				});
+			}
+			else if(res.status === APIStatus.EXISTED){
+				setError(formName.username,{
+					type: "manual",
+					message: "Tên đăng nhập đã tồn tại"
+				})
+			}else{
+				enqueueSnackbar(res.message, {
+					variant:'success',
+				});
+			}
+			
 		} catch (error) {
 			console.log(error);
-			alert(error.message)
+			enqueueSnackbar(error.message, {
+				variant:'error',
+			});
 		}
 	}
 
@@ -56,7 +86,7 @@ const App = () => {
 				}}			
 			>
 				<Controller
-					name="username"
+					name={formName.username}
 					control={control}
 					defaultValue=""
 					rules={{
@@ -64,7 +94,7 @@ const App = () => {
 					}}
 					render={({ field: { onChange, value }, fieldState: { error } }) => (
 						<TextField
-							id="username"
+							id={formName.username}
 							label="Tên đăng nhập"
 							variant="outlined"
 							onChange={onChange}
@@ -81,7 +111,7 @@ const App = () => {
 					)}
 				/>
 				<Controller
-					name="password"
+					name={formName.password}
 					control={control}
 					defaultValue=""
 					rules={{
@@ -89,7 +119,7 @@ const App = () => {
 					}}
 					render={({ field: { onChange, value }, fieldState: { error } }) => (
 						<TextField
-							id="password"
+							id={formName.password}
 							label="Mật khẩu"
 							variant="outlined"
 							onChange={onChange}
