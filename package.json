@@ -2,7 +2,7 @@
   "name": "btcn4-fe",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://pika0546.github.io/WEBNC_btcn4/",
+  "homepage": "https://pika0546.github.io/WEBNC_btcn4_fe/",
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
