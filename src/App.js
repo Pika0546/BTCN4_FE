@@ -10,20 +10,23 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
 import Stack from "@mui/material/Stack"
+import Grid from "@mui/material/Grid"
 
 import { createAccount } from './services/signup';
 import { APIStatus } from './lib/common';
+import AccountList from './component/AccountList';
 
 const App = () => {
 
 	const { handleSubmit, control, setError } = useForm();
-	const {enqueueSnackbar} = useSnackbar()
+	const [reload, setReload] = useState(false);
+	const { enqueueSnackbar } = useSnackbar()
 	const [formName] = useState({
 		username: "qwe",
 		password: "zxc"
 	})
 	const submitForm = async (data) => {
-		
+
 		const newData = {
 			username: data[formName.username],
 			password: data[formName.password],
@@ -32,115 +35,122 @@ const App = () => {
 		try {
 			const res = await createAccount(newData);
 			console.log(res);
-			if(res.status === APIStatus.OK){
+			if (res.status === APIStatus.OK) {
 				enqueueSnackbar(res.message, {
-					variant:'success',
+					variant: 'success',
 				});
+				setReload(prev => !prev)
 			}
-			else if(res.status === APIStatus.EXISTED){
-				setError(formName.username,{
+			else if (res.status === APIStatus.EXISTED) {
+				setError(formName.username, {
 					type: "manual",
 					message: "Tên đăng nhập đã tồn tại"
 				})
-			}else{
+			} else {
 				enqueueSnackbar(res.message, {
-					variant:'success',
+					variant: 'success',
 				});
 			}
-			
+
 		} catch (error) {
 			console.log(error);
 			enqueueSnackbar(error.message, {
-				variant:'error',
+				variant: 'error',
 			});
 		}
 	}
 
 	return (
-		<Paper
-			sx={{
-				padding: 2,
-				maxWidth: "400px",
-				margin: "2rem auto",
-			}}
-			component="form"
-			onSubmit={handleSubmit(submitForm)}
-		>
+		<Grid container>
+			<Grid item xs={12} sm={6}>
+				<Paper
+					sx={{
+						padding: 2,
+						maxWidth: "400px",
+					}}
+					component="form"
+					onSubmit={handleSubmit(submitForm)}
+				>
 
-			<Box
-				sx={{
-					textAlign: "center",
-					fontSize: '2rem',
-					marginY: "1rem"
-				}}
-			>
-				Đăng kí
-			</Box>
-			<Stack
-				direction="column"
-				spacing={3}
-				sx={{
-					"& .MuiFormHelperText-root":{
-						marginLeft: 0,
-					}
-				}}			
-			>
-				<Controller
-					name={formName.username}
-					control={control}
-					defaultValue=""
-					rules={{
-						required: "Tên đăng nhập không được bỏ trống!",
-					}}
-					render={({ field: { onChange, value }, fieldState: { error } }) => (
-						<TextField
-							id={formName.username}
-							label="Tên đăng nhập"
-							variant="outlined"
-							onChange={onChange}
-							size="small"
-							placeholder='Nhập tên đăng nhập'
-							margin="dense"
-							autoComplete=''
-							type="text"
-							fullWidth
-							value={value}
-							error={!!error}
-							helperText={error ? error.message : null}
+					<Box
+						sx={{
+							textAlign: "center",
+							fontSize: '2rem',
+							marginY: "1rem"
+						}}
+					>
+						Đăng kí
+					</Box>
+					<Stack
+						direction="column"
+						spacing={3}
+						sx={{
+							"& .MuiFormHelperText-root": {
+								marginLeft: 0,
+							}
+						}}
+					>
+						<Controller
+							name={formName.username}
+							control={control}
+							defaultValue=""
+							rules={{
+								required: "Tên đăng nhập không được bỏ trống!",
+							}}
+							render={({ field: { onChange, value }, fieldState: { error } }) => (
+								<TextField
+									id={formName.username}
+									label="Tên đăng nhập"
+									variant="outlined"
+									onChange={onChange}
+									size="small"
+									placeholder='Nhập tên đăng nhập'
+									margin="dense"
+									autoComplete=''
+									type="text"
+									fullWidth
+									value={value}
+									error={!!error}
+									helperText={error ? error.message : null}
+								/>
+							)}
 						/>
-					)}
-				/>
-				<Controller
-					name={formName.password}
-					control={control}
-					defaultValue=""
-					rules={{
-						required: "Mật khẩu không được bỏ trống!",
-					}}
-					render={({ field: { onChange, value }, fieldState: { error } }) => (
-						<TextField
-							id={formName.password}
-							label="Mật khẩu"
-							variant="outlined"
-							onChange={onChange}
-							size="small"
-							placeholder='Nhập mật khẩu'
-							margin="dense"
-							autoComplete=''
-							type="password"
-							fullWidth
-							value={value}
-							error={!!error}
-							helperText={error ? error.message : null}
+						<Controller
+							name={formName.password}
+							control={control}
+							defaultValue=""
+							rules={{
+								required: "Mật khẩu không được bỏ trống!",
+							}}
+							render={({ field: { onChange, value }, fieldState: { error } }) => (
+								<TextField
+									id={formName.password}
+									label="Mật khẩu"
+									variant="outlined"
+									onChange={onChange}
+									size="small"
+									placeholder='Nhập mật khẩu'
+									margin="dense"
+									autoComplete=''
+									type="password"
+									fullWidth
+									value={value}
+									error={!!error}
+									helperText={error ? error.message : null}
+								/>
+							)}
 						/>
-					)}
-				/>
-				<Button
-					variant='contained'
-					type='submit'
-				>Đăng ký</Button>
-			</Stack>
-		</Paper>
+						<Button
+							variant='contained'
+							type='submit'
+						>Đăng ký</Button>
+					</Stack>
+				</Paper>
+			</Grid>
+			<Grid item xs={12} sm={6}>
+				<AccountList reload={reload}></AccountList>
+			</Grid>
+		</Grid>
 	)
 }
 

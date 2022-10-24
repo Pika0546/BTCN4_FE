@@ -7,3 +7,8 @@ export const createAccount = async ({
 }) => {
     return makeRequest(HTTPMethod.POST, "http://localhost:3030/account", {username, password})
 }
+
+
+export const getAccountList = async () => {
+    return makeRequest(HTTPMethod.GET, "http://localhost:3030/account")
+}
