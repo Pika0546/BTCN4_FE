@@ -3,12 +3,12 @@ import List from '@mui/material/List';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
-import { makeRequest } from '../lib/api';
-import { getAccountList } from '../services/signup';
+import CircularProgress from '@mui/material/CircularProgress';
+
+import { getAccountList } from '../services/account';
 import { APIStatus } from '../lib/common';
 import { useSnackbar } from 'notistack';
 
@@ -29,7 +29,7 @@ const AccountList = ({
             if (res.status === APIStatus.OK) {
                 setState(prev => {
                     return {
-                        data: res.data,
+                        data: [...res.data].reverse(),
                         isLoading: false,
                         message: ""
                     }
@@ -72,8 +72,9 @@ const AccountList = ({
     return (
         <Paper
             sx={{
-                maxHeight: "50rem",
+                maxHeight: "35rem",
                 padding: 2,
+                overflow:"auto"
             }}
         >
             <Box
@@ -86,6 +87,17 @@ const AccountList = ({
                 Tài khoản đã tạo
             </Box>
             <List>
+                {state.isLoading && (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <CircularProgress />
+                    </Box>
+                )}
                 {state.data.map((item, index) => {
                     return (
                         <ListItem key={item.username}>
