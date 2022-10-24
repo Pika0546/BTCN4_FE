@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/WEBNC_btcn4/static/css/main.7f6f8549.css",
-    "main.js": "/WEBNC_btcn4/static/js/main.ca940257.js",
-    "index.html": "/WEBNC_btcn4/index.html",
-    "main.7f6f8549.css.map": "/WEBNC_btcn4/static/css/main.7f6f8549.css.map",
-    "main.ca940257.js.map": "/WEBNC_btcn4/static/js/main.ca940257.js.map"
+    "main.css": "/WEBNC_btcn4_fe/static/css/main.7f6f8549.css",
+    "main.js": "/WEBNC_btcn4_fe/static/js/main.ca940257.js",
+    "index.html": "/WEBNC_btcn4_fe/index.html",
+    "main.7f6f8549.css.map": "/WEBNC_btcn4_fe/static/css/main.7f6f8549.css.map",
+    "main.ca940257.js.map": "/WEBNC_btcn4_fe/static/js/main.ca940257.js.map"
   },
   "entrypoints": [
     "static/css/main.7f6f8549.css",
